@@ -1,0 +1,402 @@
+{
+  "info": {
+    "name": "Murmur API - Twitter Clone",
+    "description": "Complete API collection for Murmur - Twitter-like social media backend built with NestJS, Prisma, and MySQL",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "me"]
+            },
+            "description": "Get current user profile with follower and following counts"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by Username",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/alice",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "alice"]
+            },
+            "description": "Get any user profile by username"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Murmurs",
+      "item": [
+        {
+          "name": "Get Timeline",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/murmurs?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "murmurs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get personalized timeline with own murmurs and murmurs from followed users (paginated)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Murmur by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/murmurs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "murmurs", "1"]
+            },
+            "description": "Get single murmur details"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Murmur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hello from Postman! This is my first murmur 🎉\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/me/murmurs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "me", "murmurs"]
+            },
+            "description": "Create a new murmur (max 280 characters)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Own Murmur",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Updated murmur content from Postman ✨\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/me/murmurs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "me", "murmurs", "1"]
+            },
+            "description": "Update own murmur (only owner can update)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Own Murmur",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/me/murmurs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "me", "murmurs", "1"]
+            },
+            "description": "Delete own murmur (only owner can delete)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Likes",
+      "item": [
+        {
+          "name": "Like Murmur",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/murmurs/1/like",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "murmurs", "1", "like"]
+            },
+            "description": "Like a murmur (each user can like only once)"
+          },
+          "response": []
+        },
+        {
+          "name": "Unlike Murmur",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/murmurs/1/like",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "murmurs", "1", "like"]
+            },
+            "description": "Remove like from a murmur"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Follow",
+      "item": [
+        {
+          "name": "Follow User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2/follow",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "2", "follow"]
+            },
+            "description": "Follow a user (cannot follow yourself, only once per user)"
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-user-id",
+                "value": "{{userId}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2/follow",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "2", "follow"]
+            },
+            "description": "Unfollow a user"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Test Scenarios",
+      "item": [
+        {
+          "name": "Complete User Flow",
+          "item": [
+            {
+              "name": "1. Get My Profile",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "x-user-id",
+                    "value": "1",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "me"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "2. Create a Murmur",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "x-user-id",
+                    "value": "1",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"Testing the complete user flow! 🚀\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/me/murmurs",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "me", "murmurs"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. Follow Another User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "x-user-id",
+                    "value": "1",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/users/2/follow",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "users", "2", "follow"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "4. View Timeline",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "x-user-id",
+                    "value": "1",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/murmurs?page=1&limit=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "murmurs"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "5. Like a Murmur",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "x-user-id",
+                    "value": "1",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/murmurs/2/like",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "murmurs", "2", "like"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
