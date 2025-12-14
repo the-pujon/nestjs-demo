@@ -72,14 +72,14 @@ export class MurmurService {
 
     // Transform to response DTOs
     const data = murmurs.map((murmur) => ({
-      id: murmur.id,
+      id: murmur.id.toString(),
       content: murmur.content,
       createdAt: murmur.createdAt,
       updatedAt: murmur.updatedAt,
       likeCount: murmur.likes.length,
       likedByMe: murmur.likes.some((like) => like.userId === userId),
       author: {
-        id: murmur.user.id,
+        id: murmur.user.id.toString(),
         username: murmur.user.username,
         displayName: murmur.user.displayName,
       },
@@ -126,7 +126,7 @@ export class MurmurService {
     }
 
     return {
-      id: murmur.id,
+      id: murmur.id.toString(),
       content: murmur.content,
       createdAt: murmur.createdAt,
       updatedAt: murmur.updatedAt,
@@ -135,7 +135,7 @@ export class MurmurService {
         ? murmur.likes.some((like) => like.userId === userId)
         : false,
       author: {
-        id: murmur.user.id,
+        id: murmur.user.id.toString(),
         username: murmur.user.username,
         displayName: murmur.user.displayName,
       },
@@ -180,14 +180,14 @@ export class MurmurService {
     });
 
     return {
-      id: murmur.id,
+      id: murmur.id.toString(),
       content: murmur.content,
       createdAt: murmur.createdAt,
       updatedAt: murmur.updatedAt,
       likeCount: murmur.likes.length,
       likedByMe: false,
       author: {
-        id: murmur.user.id,
+        id: murmur.user.id.toString(),
         username: murmur.user.username,
         displayName: murmur.user.displayName,
       },
@@ -248,14 +248,14 @@ export class MurmurService {
     });
 
     return {
-      id: updatedMurmur.id,
+      id: updatedMurmur.id.toString(),
       content: updatedMurmur.content,
       createdAt: updatedMurmur.createdAt,
       updatedAt: updatedMurmur.updatedAt,
       likeCount: updatedMurmur.likes.length,
       likedByMe: updatedMurmur.likes.some((like) => like.userId === userId),
       author: {
-        id: updatedMurmur.user.id,
+        id: updatedMurmur.user.id.toString(),
         username: updatedMurmur.user.username,
         displayName: updatedMurmur.user.displayName,
       },

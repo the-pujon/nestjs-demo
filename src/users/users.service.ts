@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Injectable,
   NotFoundException,
@@ -13,7 +10,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllUsers(): Promise<any> {
+  async getAllUsers(): Promise<UserResponseDto[]> {
     const users = await this.prisma.client.user.findMany({
       include: {
         _count: {
@@ -27,7 +24,16 @@ export class UsersService {
 
     console.log('users', users);
 
-    return users;
+    // Transform BigInt to string for JSON serialization
+    return users.map((user) => ({
+      id: user.id.toString(),
+      username: user.username,
+      displayName: user.displayName,
+      email: user.email ?? undefined,
+      createdAt: user.createdAt,
+      followerCount: user._count.followers,
+      followingCount: user._count.following,
+    }));
   }
 
   async getCurrentUser(userId: bigint): Promise<UserResponseDto> {
@@ -48,7 +54,7 @@ export class UsersService {
     }
 
     return {
-      id: user.id,
+      id: user.id.toString(),
       username: user.username,
       displayName: user.displayName,
       email: user.email ?? undefined,
@@ -76,7 +82,7 @@ export class UsersService {
     }
 
     return {
-      id: user.id,
+      id: user.id.toString(),
       username: user.username,
       displayName: user.displayName,
       email: user.email ?? undefined,

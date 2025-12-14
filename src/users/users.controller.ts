@@ -21,6 +21,7 @@ export class UsersController {
   @Get('users')
   async getAllUsers(): Promise<UserResponseDto[]> {
     console.log('come here');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.usersService.getAllUsers();
   }
 
