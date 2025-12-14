@@ -50,7 +50,7 @@ A Twitter-like social media backend built with NestJS, Prisma, and MySQL.
 
 5. **Seed the database** (optional, for testing)
    ```bash
-   npx ts-node seed.ts
+   npm run seed
    ```
 
 6. **Start the application**
