@@ -13,19 +13,55 @@ datasource db {
   provider = "mysql"
 }
 
-
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id            BigInt    @id @default(autoincrement())
+  username      String    @unique
+  displayName   String
+  email         String?   @unique
+  passwordHash  String?   // optional if auth is implemented
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  murmurs       Murmur[]
+  likes         MurmurLike[]
+
+  followers     Follow[]  @relation("followers")
+  following     Follow[]  @relation("following")
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String? @db.Text
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Murmur {
+  id        BigInt    @id @default(autoincrement())
+  userId    BigInt
+  content   String    @db.VarChar(280)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     MurmurLike[]
+
+  @@index([userId, createdAt])
+}
+
+model Follow {
+  followerId   BigInt
+  followingId  BigInt
+  createdAt    DateTime @default(now())
+
+  follower     User @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  following    User @relation("followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId]) // ensures user can't follow same person twice
+}
+
+model MurmurLike {
+  userId    BigInt
+  murmurId  BigInt
+  createdAt DateTime @default(now())
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  murmur    Murmur  @relation(fields: [murmurId], references: [id], onDelete: Cascade)
+
+  @@id([userId, murmurId]) // ensures user can't like same murmur twice
 }
