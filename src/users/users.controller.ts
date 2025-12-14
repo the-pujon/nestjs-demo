@@ -17,6 +17,13 @@ import { UserResponseDto } from './dto/user-response.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // GET /api/users - Get all users
+  @Get('users')
+  async getAllUsers(): Promise<UserResponseDto[]> {
+    console.log('come here');
+    return await this.usersService.getAllUsers();
+  }
+
   // GET /api/me - Get current user info
   @Get('me')
   @UseGuards(AuthGuard)

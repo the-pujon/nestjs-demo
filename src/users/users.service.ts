@@ -13,6 +13,23 @@ import { UserResponseDto } from './dto/user-response.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
+  async getAllUsers(): Promise<any> {
+    const users = await this.prisma.client.user.findMany({
+      include: {
+        _count: {
+          select: {
+            followers: true,
+            following: true,
+          },
+        },
+      },
+    });
+
+    console.log('users', users);
+
+    return users;
+  }
+
   async getCurrentUser(userId: bigint): Promise<UserResponseDto> {
     const user = await this.prisma.client.user.findUnique({
       where: { id: userId },
