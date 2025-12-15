@@ -6,4 +6,12 @@ export class UserResponseDto {
   createdAt: Date;
   followerCount: number;
   followingCount: number;
+  isFollowing?: boolean; // Whether the current user is following this user
+  murmurs?: Array<{
+    id: string;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    likeCount: number;
+  }>;
 }

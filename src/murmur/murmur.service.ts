@@ -15,7 +15,7 @@ export class MurmurService {
   constructor(private prisma: PrismaService) {}
 
   /**
-   * Get timeline with own murmurs and murmurs from followed users
+   * Get timeline with all murmurs
    * Supports pagination
    */
   async getTimeline(
@@ -23,32 +23,14 @@ export class MurmurService {
     page: number = 1,
     limit: number = 10,
   ): Promise<PaginatedResponse<MurmurResponseDto>> {
-    // Get list of users that current user follows
-    const following = await this.prisma.client.follow.findMany({
-      where: { followerId: userId },
-      select: { followingId: true },
-    });
-
-    const followingIds = following.map((f) => f.followingId);
-
-    // Include own user id in the list
-    const userIds = [userId, ...followingIds];
-
     // Calculate offset
     const skip = (page - 1) * limit;
 
-    // Get total count
-    const total = await this.prisma.client.murmur.count({
-      where: {
-        userId: { in: userIds },
-      },
-    });
+    // Get total count of all murmurs
+    const total = await this.prisma.client.murmur.count();
 
-    // Get murmurs
+    // Get all murmurs
     const murmurs = await this.prisma.client.murmur.findMany({
-      where: {
-        userId: { in: userIds },
-      },
       include: {
         user: {
           select: {

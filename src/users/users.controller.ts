@@ -36,10 +36,12 @@ export class UsersController {
 
   // GET /api/users/:username - Get user by username
   @Get('users/:username')
+  @UseGuards(AuthGuard)
   async getUserByUsername(
+    @CurrentUser() user: { id: bigint },
     @Param('username') username: string,
   ): Promise<UserResponseDto> {
-    return this.usersService.getUserByUsername(username);
+    return this.usersService.getUserByUsername(username, user.id);
   }
 
   // POST /api/users/:id/follow - Follow a user

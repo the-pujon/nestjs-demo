@@ -64,7 +64,10 @@ export class UsersService {
     };
   }
 
-  async getUserByUsername(username: string): Promise<UserResponseDto> {
+  async getUserByUsername(
+    username: string,
+    currentUserId?: bigint,
+  ): Promise<UserResponseDto> {
     const user = await this.prisma.client.user.findUnique({
       where: { username },
       include: {
@@ -74,11 +77,37 @@ export class UsersService {
             following: true,
           },
         },
+        murmurs: {
+          include: {
+            likes: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
 
     if (!user) {
       throw new NotFoundException('User not found');
+    }
+
+    // Check if current user is following this user
+    let isFollowing = false;
+    if (currentUserId && currentUserId !== user.id) {
+      const follow = await this.prisma.client.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: currentUserId,
+            followingId: user.id,
+          },
+        },
+      });
+      isFollowing = !!follow;
     }
 
     return {
@@ -89,6 +118,14 @@ export class UsersService {
       createdAt: user.createdAt,
       followerCount: user._count.followers,
       followingCount: user._count.following,
+      isFollowing,
+      murmurs: user.murmurs.map((murmur) => ({
+        id: murmur.id.toString(),
+        content: murmur.content,
+        createdAt: murmur.createdAt,
+        updatedAt: murmur.updatedAt,
+        likeCount: murmur.likes.length,
+      })),
     };
   }
 
