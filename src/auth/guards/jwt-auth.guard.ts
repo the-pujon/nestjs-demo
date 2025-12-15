@@ -7,14 +7,10 @@ import {
 import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 
-interface RequestWithUser extends Request {
-  user?: { id: bigint; sub: string; username: string };
-}
-
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class JwtAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<RequestWithUser>();
+    const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -25,16 +21,11 @@ export class AuthGuard implements CanActivate {
       const payload = jwt.verify(
         token,
         process.env.JWT_SECRET || 'your-secret-key',
-      ) as { sub: string; username: string };
-
-      // Attach user info to request with BigInt id
-      request.user = {
-        id: BigInt(payload.sub),
-        sub: payload.sub,
-        username: payload.username,
-      };
+      );
+      // Attach user info to request
+      request['user'] = payload;
       return true;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid token');
     }
   }
